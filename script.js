@@ -1,8 +1,4 @@
-var colors = ['silver', 'gray', 'white', 'maroon', 'red',
-  'purple', 'fuchsia', 'green', 'lime', 'olive',
-  'yellow', 'navy', 'blue', 'teal', 'aqua']
-
-var G = 9.81;
+var g = 9.81;
 const DELTA_T = 0.01;
 var MAX_X_DOMAIN = 10;
 
@@ -15,6 +11,13 @@ var func_str = '';
 var forceType = false;
 var own_func = null
 objects = []
+
+var colors = [
+  "rgba(255, 0, 0, 1)", "rgba(255, 154, 0, 1)", "rgba(208, 222, 33, 1)", "rgba(79, 220, 74, 1)", 
+  "rgba(63, 218, 216, 1)", "rgba(47, 201, 226, 1)", "rgba(28, 127, 238, 1)", "rgba(95, 21, 242, 1)", 
+  "rgba(186, 12, 248, 1)",
+]
+
 
 function round(number, a) {
   if (a > 0) {
@@ -82,7 +85,7 @@ function gravitationalEnergy(x, y) {
 }
 
 function fallingEnergy(x, y) {
-  return G * (y - y_0);
+  return g * (y - y_0);
 }
 
 function elasticityEnergy(x, y) {
@@ -119,29 +122,6 @@ class Border {
     return this.DOMObject;
   }
 }
-
-
-is_moving = false;
-next_step = false;
-counter = 1;
-
-setInterval(() => {
-  if (is_moving || next_step) {
-    objects.forEach(element => {
-      element.move();
-    });
-    next_step = false;
-  }
-
-  return;
-}, DELTA_T * 1000)
-
-
-colors = [
-  "rgba(255, 0, 0, 1)", "rgba(255, 154, 0, 1)", "rgba(208, 222, 33, 1)", "rgba(79, 220, 74, 1)", 
-  "rgba(63, 218, 216, 1)", "rgba(47, 201, 226, 1)", "rgba(28, 127, 238, 1)", "rgba(95, 21, 242, 1)", 
-  "rgba(186, 12, 248, 1)",
-]
 
 function createHiPPICanvas(canvas, width, height) {
   const ratio = window.devicePixelRatio;
@@ -261,6 +241,7 @@ function collectData() {
     return;
   }
   let elasticity_c_ = parseFloat(document.getElementById('elasticity_c').value);
+  let g_ = parseFloat(document.getElementById('g').value);
 
   let x_func = document.getElementById('f_x_function').value;
   let y_func = document.getElementById('f_y_function').value;
@@ -269,7 +250,7 @@ function collectData() {
 
   let fType = document.querySelector('input[name="forceType"]:checked').value;
 
-  return [x_0_, y_0_, mass_, MAX_X_DOMAIN_, elasticity_c_, func2, fType];
+  return [x_0_, y_0_, mass_, MAX_X_DOMAIN_, elasticity_c_, g_, func2, fType];
 }
 
 
@@ -278,7 +259,7 @@ function reloadForm() {
   if (data == null) {
     return;
   }
-  let old_data = [x_0, y_0, mass, MAX_X_DOMAIN, elasticity_c, func_str, forceType];
+  let old_data = [x_0, y_0, mass, MAX_X_DOMAIN, elasticity_c, g, func_str, forceType];
   let are_equal = old_data.length === data.length && old_data.every(function(value, index) { return value === data[index]});
   if (are_equal){
     document.getElementById('curtain').style.visibility = 'visible';
@@ -286,7 +267,7 @@ function reloadForm() {
     document.getElementById('curtain').style.visibility = 'hidden';
     return;
   }
-  [x_0, y_0, mass, MAX_X_DOMAIN, elasticity_c, func_str, forceType] = data;
+  [x_0, y_0, mass, MAX_X_DOMAIN, elasticity_c, g, func_str, forceType] = data;
 
   if (forceType == 'inputForce'){
     let func2;
