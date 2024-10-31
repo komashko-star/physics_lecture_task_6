@@ -15,23 +15,41 @@ function round(number, a) {
   } else if (a == 0) {
     return Math.round(number);
   } else {
-    return number - number % Math.pow(10, -a);
+    let r = number % Math.pow(10, -a);
+
+    if (r / Math.pow(10, -a) > 0.5) {
+      return number - number % Math.pow(10, -a);
+    } else {
+      return number - number % Math.pow(10, -a) + 1;
+    }
+
   }
 }
 
 var x_0 = 0;
 var y_0 = 0;
+var elasticity_c = 1;
+
 const GConst = 6.67 * Math.pow(10, -11);
 var mass = 5.9722 * Math.pow(10, 24);
 
 const EPSILON = 0.05;
-
 
 function gravitationalForce(x, y) {
   let r2 = Math.pow(x - x_0, 2) + Math.pow(y - y_0, 2);
 
   return mass * GConst / r2;
 }
+
+function fallingForce(x, y) {
+  return G * (y - y_0);
+}
+
+function elasticityForce(x, y) {
+  return elasticity_c * (Math.pow(x - x_0, 2) + Math.pow(y - y_0, 2)) / 2;
+}
+
+var func = elasticityForce;
 
 function innerSizes(node) {
   var computedStyle = getComputedStyle(node);
@@ -104,7 +122,7 @@ function createHiPPICanvas(canvas, width, height) {
   return canvas;
 }
   
-function makeCharts(func) {
+function makeCharts() {
     let chartObject = document.getElementById('mainchart');
     createHiPPICanvas(chartObject, border.width, border.height);
 
@@ -115,18 +133,18 @@ function makeCharts(func) {
 
     chartContext.fillStyle = 'black';
     let i_0 = (x_0 - border.x_domain_start) / (border.x_domain - border.x_domain_start) * pixel_width;
-    let j_0 = (y_0 - border.y_domain_start) / (border.y_domain - border.y_domain_start) * pixel_height;
+    let j_0 = pixel_height - (y_0 - border.y_domain_start) / (border.y_domain - border.y_domain_start) * pixel_height;
     let radius = 10;
 
     chartContext.beginPath();
     chartContext.arc(i_0, j_0, radius, 0, 2 * Math.PI);
     chartContext.fill();
-    
+
     let energies = [];
     for (let i = 0; i < pixel_width; i++) {
       let x = i / pixel_width * (border.x_domain - border.x_domain_start) + border.x_domain_start;
       for (let j = 0; j < pixel_height; j++) {
-        let y = j / pixel_height * (border.y_domain - border.y_domain_start) + border.y_domain_start;
+        let y = (pixel_height - j) / pixel_height * (border.y_domain - border.y_domain_start) + border.y_domain_start;
         
         let energy = round(func(x, y), -1);
         if (!(energy in energies)) {
@@ -139,7 +157,6 @@ function makeCharts(func) {
         }
       }
     }
-    console.log(energies);
 }
 
 
@@ -147,7 +164,7 @@ function reloadModel() {
     objects = [];
     border = new Border('border');
 
-    makeCharts(gravitationalForce);
+    makeCharts();
 }
 
 
@@ -156,6 +173,7 @@ function reloadForm() {
   mass_exponent = parseFloat(document.getElementById('mass_exponent').value);
   mass = mass_mantissa * Math.pow(10, mass_exponent);
   MAX_X_DOMAIN = parseFloat(document.getElementById('x_domain').value) / 2;
+  elasticity_c = parseFloat(document.getElementById('elasticity_c').value);
 
 
   reloadModel();
@@ -167,8 +185,8 @@ function showEnergyValue(event) {
   shower.style.display = 'inline';
 
   let x = event.offsetX / border.width * (border.x_domain - border.x_domain_start) + border.x_domain_start;
-  let y = event.offsetY / border.height * (border.y_domain - border.y_domain_start) + border.y_domain_start;
-  shower.innerHTML = gravitationalForce(x, y) + " Дж";
+  let y = (border.height - event.offsetY) / border.height * (border.y_domain - border.y_domain_start) + border.y_domain_start;
+  shower.innerHTML = func(x, y) + " Дж";
 
   let shower_width = getComputedStyle(shower).width;
   shower_width = +(shower_width.slice(0, shower_width.length - 2));

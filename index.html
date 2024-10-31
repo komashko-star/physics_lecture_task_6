@@ -9,7 +9,7 @@
   </head>
   <body>
       <div id="header">
-        <h1 id="header_text">Моделирование полета мяча с сопротивлением среды</h1>
+        <h1 id="header_text">Моделирование полей потенциальных энергий</h1>
       </div>
 
 
@@ -24,7 +24,11 @@
 
           <label for="x_domain">w</label> = <input type="number" step="0.001" value="1" id="x_domain" required> м <br/>
           
-          <br/><button type="submit">Перерисовать график</button><br/>
+          Коэффициент упругости: <br/>
+
+          <label for="elasticity_c">k</label> = <input type="number" step="0.001" value="1" id="elasticity_c" required> Н/мяча<br/>
+          
+          <br/><button type="submit">Перестроить график</button><br/>
         </form>
     </div>
     <div id="border">
