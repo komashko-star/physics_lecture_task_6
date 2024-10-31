@@ -9,27 +9,78 @@
   </head>
   <body>
       <div id="header">
-        <h1 id="header_text">Моделирование полей потенциальных энергий</h1>
+        <h1 id="header_text">Моделирование полей энергии потенциальных сил</h1>
       </div>
 
 
       <div id="body1">
+        
+      <div id="curtain"><p>Загрузка</p></div>
+
       <div id="form">
-        <form id="collisionForm">
-          Масса тела: <br/>
-
-          <label for="mass">m</label> = <input type="number" step="0.01" value="1" id="mass" required>x 10^<input type="number" step="1" value="11" class="exponent_input" id="mass_exponent" required> кг <br/>
+        <form id="collisionForm">          
+          Начало координат: <br/> 
           
-          Ширина видимой области: <br/>
-
-          <label for="x_domain">w</label> = <input type="number" step="0.001" value="1" id="x_domain" required> м <br/>
+          <label for="x_0">x<sub>0</sub></label> = <input type="number" step="0.001" value="0" id="x_0" class="exponent_input" required> м;
+          <label for="y_0">y<sub>0</sub></label> = <input type="number" step="0.001" value="0" id="y_0" class="exponent_input" required> м <br/>
+              
+          Ширина видимой области: <label for="x_domain">w</label> = <input type="number" step="0.001" value="20" id="x_domain" class="exponent_input" required> м <br/>
           
+          Тип силы: <br/>
+
+          <input type="radio" id="gravitationalRadio" name="forceType" value="gravitationalForce" checked /> <label for="gravitationalRadio">Сила гравитации</label> <br/>
+          
+          <input type="radio" id="elasticityRadio" name="forceType" value="elasticityForce" /> <label for="elasticityRadio">Сила упругости</label> <br/>
+          
+          <input type="radio" id="fallingRadio" name="forceType" value="fallingForce" /> <label for="fallingRadio">Сила тяжести</label> <br/>
+          
+          <input type="radio" id="inputRadio" name="forceType" value="inputForce" /> <label for="inputRadio">Заданная сила</label> <br/>
+
+          <div id="gravitationalForceForm">
+            Масса массивного тела: <br/>
+
+            <label for="mass">M</label> = <input type="number" step="0.01" value="1" id="mass" required>x 10^<input type="number" step="1" value="11" class="exponent_input" id="mass_exponent" required> кг <br/>
+          </div>
+
+          <div id="elasticityForceForm">
           Коэффициент упругости: <br/>
 
-          <label for="elasticity_c">k</label> = <input type="number" step="0.001" value="1" id="elasticity_c" required> Н/мяча<br/>
-          
-          <br/><button type="submit">Перестроить график</button><br/>
+          <label for="elasticity_c">k</label> = <input type="number" step="0.001" value="1" id="elasticity_c" required> Н/м<br/>
+          </div> 
+
+          <div id="fallingForceForm">
+          Ускорение свободного падения: <br/>
+
+          <label for="g">k</label> = <input type="number" step="0.001" value="9.81" id="g" required> м/с<sup>2</sup><br/>
+          </div>
+
+          <div id="inputForceForm">
+          Функция силы F(x, y): <br/>
+
+          <label for="f_function">F(x, y)</label> = (<input type="text" value="x" id="f_x_function" required>; 
+          <input type="text" value="y" id="f_y_function" required>)<br/>
+          </div>
+
+          <button type="submit">Перестроить график</button><br/>
+
+          <div id="color_settings">
+            <div>
+            <div class="colorrow"><div class="colorsq" id="colorsq1"></div> <input type="number" step="0.001" value="-40" id="colorsq1value" class="exponent_input" required> ± <input type="number" step="0.001" value="1" id="color_gradient_epsilon" class="exponent_input" required> Дж </div>
+            <div class="colorrow"> + <input type="number" step="0.001" value="10" id="color_gradient_increment" class="exponent_input" required> Дж</div>
+            <div class="colorrow"><div class="colorsq" id="colorsq2"></div> <p id="colorsq2value"></p> Дж </div>
+            <div class="colorrow"><div class="colorsq" id="colorsq3"></div> <p id="colorsq3value"></p> Дж </div>
+            <div class="colorrow"><div class="colorsq" id="colorsq4"></div> <p id="colorsq4value"></p> Дж </div>
+            <div class="colorrow"><div class="colorsq" id="colorsq5"></div> <p id="colorsq5value"></p> Дж </div>
+            <div class="colorrow"><div class="colorsq" id="colorsq6"></div> <p id="colorsq6value"></p> Дж </div>
+            <div class="colorrow"><div class="colorsq" id="colorsq7"></div> <p id="colorsq7value"></p> Дж </div>
+            <div class="colorrow"><div class="colorsq" id="colorsq8"></div> <p id="colorsq8value"></p> Дж </div>
+            <div class="colorrow"><div class="colorsq" id="colorsq9"></div> <p id="colorsq9value"></p> Дж </div>
+            </div>
+          </div>
+
         </form>
+
+
     </div>
     <div id="border">
       <canvas id="mainchart"></canvas>
